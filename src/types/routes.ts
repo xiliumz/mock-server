@@ -1,9 +1,9 @@
-import { Router } from 'hyper-express';
+import HTTPMethod from './http-method'
 
 export default interface Route {
   path: string
 
-  method: 'get' | 'post'
+  method: HTTPMethod
 
   response: Record<string, string>
 }
