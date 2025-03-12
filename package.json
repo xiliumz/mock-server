@@ -1,0 +1,28 @@
+{
+  "name": "mock-server",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc; node ./dist/main.js",
+    "dev": "tsc; "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiliumz/mock-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xiliumz/mock-server/issues"
+  },
+  "homepage": "https://github.com/xiliumz/mock-server#readme",
+  "description": "",
+  "dependencies": {
+    "@faker-js/faker": "^9.6.0",
+    "hyper-express": "^6.17.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "typescript": "^5.8.2"
+  }
+}
