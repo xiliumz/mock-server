@@ -2,6 +2,7 @@ import { Server } from "hyper-express";
 import { faker } from "@faker-js/faker"; // Import Faker.js
 import Route from './types/routes';
 import logger from './middleware/logger';
+import determineStatus from './helpers/determine-status';
 
 // Global mock routes with Faker function mappings
 const mockRoutes: Route[] = [
@@ -38,7 +39,7 @@ app.use(logger);
 // Register mock routes dynamically
 mockRoutes.forEach(({ path, method, response }) => {
   app[method](path, (_req, res) => {
-    res.json(generateMockResponse(response));
+    res.status(determineStatus(method)).json(generateMockResponse(response));
   });
 
   console.log(`Registered mock route: ${method.toUpperCase()} ${path}`);
