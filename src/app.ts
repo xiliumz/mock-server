@@ -10,9 +10,9 @@ import delay from './middleware/delay';
 export default function buildApp<T extends Record<string, unknown>>(routes: Route<T>[]) {
   // Create Hyper Express server
   const app = new Server();
+  app.use(cors);
   app.use(logger);
 
-  app.use(cors);
   app.use(delay(2000));
 
   // Register mock routes dynamically
