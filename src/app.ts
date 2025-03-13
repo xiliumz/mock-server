@@ -21,12 +21,9 @@ export default function buildApp(routes: Route[]) {
 
   // Register mock routes dynamically
   routes.forEach(({ path, method, response, isGenerated = true }) => {
+    const data = isGenerated ? generateMockResponse(response) : response
     app[method](path, (_req, res) => {
-      if (isGenerated) {
-        res.status(determineStatus(method)).json(generateMockResponse(response));
-      } else {
-        res.status(determineStatus(method)).json(response)
-      }
+      res.status(determineStatus(method)).json(data);
     });
 
     console.log(`Registered mock route: ${method.toUpperCase()} ${path}`);
