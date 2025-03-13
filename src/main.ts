@@ -43,13 +43,22 @@ const rabProjectsRoute = createRoutes({
     })),
   },
   isGenerated: false,
-  queryParams: {
-    name: 'limit',
-    handler: (data, value) => {
-      const filtered = data.projects.slice(0, parseInt(value));
-      data.projects = filtered;
+  queryParams: [
+    {
+      name: 'offset',
+      handler: (data, value) => {
+        const filtered = data.projects.slice(parseInt(value));
+        data.projects = filtered;
+      },
     },
-  },
+    {
+      name: 'limit',
+      handler: (data, value) => {
+        const filtered = data.projects.slice(0, parseInt(value));
+        data.projects = filtered;
+      },
+    },
+  ],
 });
 // Create server
 

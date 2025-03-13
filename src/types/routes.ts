@@ -8,7 +8,7 @@ export default interface Route<T> {
 
   response: T;
 
-  queryParams?: QueryParams<T>;
+  queryParams?: QueryParams<T>[];
 
   isGenerated?: boolean;
 }

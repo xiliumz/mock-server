@@ -15,14 +15,19 @@ export default function buildApp<T extends Record<string, unknown>>(routes: Rout
 
   // Register mock routes dynamically
   routes.forEach(({ path, method, response, isGenerated = true, queryParams }) => {
+    /** Initial generated data. This data should be presistent */
     const data = isGenerated ? generateMockResponse(response) : response;
 
     app[method](path, (req, res) => {
-      if (queryParams) {
-        const value = getQueryParamsValue(req, queryParams.name);
-        if (value) queryParams.handler(data as T, value);
+      /** This is the data that will be sent and added filter */
+      const result = { ...data };
+      if (queryParams && queryParams.length > 0) {
+        queryParams.forEach((param) => {
+          const value = getQueryParamsValue(req, param.name);
+          if (value) param.handler(result as T, value);
+        });
       }
-      res.status(determineStatus(method)).json(data);
+      res.status(determineStatus(method)).json(result);
     });
 
     console.log(`Registered mock route: ${method.toUpperCase()} ${path}`);
