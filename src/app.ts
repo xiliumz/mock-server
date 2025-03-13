@@ -5,13 +5,15 @@ import cors from './middleware/cors';
 import logger from './middleware/logger';
 import generateMockResponse from './services/generate-mock-response';
 import Route from './types/routes';
+import delay from './middleware/delay';
 
 export default function buildApp<T extends Record<string, unknown>>(routes: Route<T>[]) {
   // Create Hyper Express server
   const app = new Server();
+  app.use(logger);
 
   app.use(cors);
-  app.use(logger);
+  app.use(delay(2000));
 
   // Register mock routes dynamically
   routes.forEach(({ path, method, response, isGenerated = true, queryParams }) => {

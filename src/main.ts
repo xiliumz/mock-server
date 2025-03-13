@@ -41,14 +41,17 @@ const rabProjectsRoute = createRoutes({
       /** Current operational status of the project. */
       status: faker.helpers.arrayElement(['not_started', 'ongoing', 'completed']),
     })),
+    count: 25,
   },
   isGenerated: false,
   queryParams: [
     {
       name: 'offset',
       handler: (data, value) => {
+        const count = data.projects.length;
         const filtered = data.projects.slice(parseInt(value));
         data.projects = filtered;
+        data.count = count;
       },
     },
     {
