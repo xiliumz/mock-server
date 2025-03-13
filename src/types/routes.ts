@@ -5,5 +5,7 @@ export default interface Route {
 
   method: HTTPMethod
 
-  response: Record<string, string>
+  response: Record<string, string> | Record<string, unknown>
+
+  isGenerated?: boolean
 }
