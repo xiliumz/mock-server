@@ -1,9 +1,14 @@
-import HTTPMethod from './http-method'
+import HTTPMethod from './http-method';
+import { QueryParams } from './query-params';
 
-export default interface Route {
-  path: string
+export default interface Route<T> {
+  path: string;
 
-  method: HTTPMethod
+  method: HTTPMethod;
 
-  response: Record<string, string>
+  response: T;
+
+  queryParams?: QueryParams<T>[];
+
+  isGenerated?: boolean;
 }
