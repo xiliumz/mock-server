@@ -11,6 +11,6 @@
  * const value1: Int = 'int.10';    // Random number with a minimum of 10.
  * const value2: Int = 'int.5.20';   // Random number between 5 (min) and 20 (max).
  */
-type Number = 'number' | `number.${number}` | `number.${number}.${number}`;
+type Number = 'number' | `number.${number}`;
 
 export default Number;
