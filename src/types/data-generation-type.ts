@@ -13,6 +13,6 @@ import Array from './generation-data/array'
  * - Array: For generating arrays of various data types
  * 
  */
-type DataGeneration = Lorem | Number | 'past' | 'future' | 'boolean' | Array
+type DataGeneration = 'uuid' | Lorem | Number | 'past' | 'future' | 'boolean' | Array
 
 export default DataGeneration

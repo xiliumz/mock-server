@@ -14,6 +14,9 @@ export default function generateMockResponse<T extends Record<string, DataGenera
     const fakerPathArray = fakerPath.split('.');
 
     switch (fakerPathArray[0]) {
+      case 'uuid':
+        response[key] = faker.string.uuid();
+        break;
       case 'lorem':
         response[key] = faker.lorem.words({ min: Number(fakerPathArray[1]), max: Number(fakerPathArray[2]) });
         break;
