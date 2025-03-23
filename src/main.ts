@@ -97,8 +97,27 @@ const productByIdRoute: Route<any> = createRoutes({
   ],
 });
 
+// Example of using array with data generation
+const tagsRoute: Route<any> = createRoutes({
+  path: '/tags',
+  method: 'get',
+  response: {
+    tags: [
+      'uuid',         // Will generate array of UUIDs
+      'lorem.1.2',    // Will generate array of short text
+      'boolean'       // Will generate array of booleans
+    ],
+    categories: [
+      { id: 'uuid', name: 'lorem.2.3' },  // Will generate array of objects with generated values
+      { id: 'uuid', name: 'lorem.2.3' },
+      { id: 'uuid', name: 'lorem.2.3' }
+    ]
+  },
+  isGenerated: true
+});
+
 // Create server
-const app = buildApp([productsRoute, productByIdRoute]);
+const app = buildApp([productsRoute, productByIdRoute, tagsRoute]);
 
 app.listen(3000, () => {
   console.log('Mock Server running at http://localhost:3000 🚀');
