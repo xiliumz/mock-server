@@ -40,9 +40,9 @@ export default function buildApp<T extends Record<string, unknown>>(routes: Rout
 
         // Send response with appropriate status code
         res.status(determineStatus(method)).json(result);
-      } catch (error) {
+      } catch (error: unknown) {
         console.error(`Error handling ${method.toUpperCase()} ${path}:`, error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: (error as Error).message });
       }
     };
 

@@ -53,7 +53,7 @@ function generateSingleValue(fakerPath: string): unknown {
     case 'future':
       return faker.date.future();
     default:
-      // Handle other cases or use a safe fallback
-      return fakerPath;
+      console.log('Invalid faker path:', fakerPath);
+      return null;
   }
 }
