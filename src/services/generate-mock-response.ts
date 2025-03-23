@@ -1,32 +1,59 @@
 import { faker } from '@faker-js/faker';
 import Route from '../types/routes';
+import DataGeneration from '../types/data-generation-type';
 
-export default function generateMockResponse<T extends Record<string, unknown>>(
-  responseTemplate: Route<T>['response']
+export default function generateMockResponse<T extends Record<string, DataGeneration>>(
+  responseTemplate: Route<T>['response'],
+  isGenerated = true
 ) {
-  const response = {} as Partial<T>;
+  if (!isGenerated) return responseTemplate;
 
-  Object.entries(responseTemplate).forEach(([key, fakerPath]) => {
-    if (typeof fakerPath !== 'string') {
-      console.warn(`Expected faker path as string for key "${key}", but got ${typeof fakerPath}. Skipping.`);
-      return;
-    }
+  const response = {} as Record<string, unknown>;
 
-    let fakerProperty: any = faker;
-    try {
-      const parts = fakerPath.split('.');
-      for (const part of parts) {
-        if (!(part in fakerProperty)) {
-          throw new Error(`Property "${part}" does not exist on faker`);
+  Object.entries(responseTemplate).forEach(([key, value]) => {
+    // Handle arrays by applying generation to each element
+    if (Array.isArray(value)) {
+      response[key] = value.map(item => {
+        if (typeof item === 'string') {
+          // If array element is a string, apply data generation
+          return generateSingleValue(item);
+        } else if (typeof item === 'object') {
+          // If array element is an object, recursively generate its properties
+          return generateMockResponse(item as Record<string, DataGeneration>, true);
         }
-        fakerProperty = fakerProperty[part];
-      }
-      response[key as keyof T] = typeof fakerProperty === 'function' ? fakerProperty() : fakerProperty;
-    } catch (error: any) {
-      console.error(`Error processing key "${key}" with path "${fakerPath}": ${error.message}`);
-      response[key as keyof T] = `Invalid Faker key: ${fakerPath}` as unknown as T[keyof T];
+        return item;
+      });
+    } else if (typeof value === 'string') {
+      // Handle non-array string values with data generation
+      response[key] = generateSingleValue(value);
+    } else {
+      // Pass through any other values
+      response[key] = value;
     }
   });
 
   return response;
+}
+
+// Helper function to generate a single value based on faker path
+function generateSingleValue(fakerPath: string): unknown {
+  const fakerPathArray = fakerPath.split('.');
+
+  switch (fakerPathArray[0]) {
+    case 'uuid':
+      return faker.string.uuid();
+    case 'lorem':
+      return faker.lorem.words({ min: Number(fakerPathArray[1]), max: Number(fakerPathArray[2]) });
+    case 'number':
+      return faker.number.int({ min: Number(fakerPathArray[1]), max: Number(fakerPathArray[2]) });
+    case 'boolean':
+      return faker.datatype.boolean();
+    case 'past':
+      return faker.date.past();
+    case 'future':
+      return faker.date.future();
+    default:
+      // Handle other cases or use a safe fallback
+      return fakerPath;
+  }
 }
