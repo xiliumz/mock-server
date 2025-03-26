@@ -1,5 +1,5 @@
 import Route from '../types/routes';
 
-export default function createRoutes<T>(routes: Route<T>): Route<T> {
+export default function createRoute<T>(routes: Route<T>): Route<any> {
   return routes;
 }

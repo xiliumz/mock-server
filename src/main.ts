@@ -1,10 +1,9 @@
-import { da, faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import buildApp from './app';
-import createRoutes from './helpers/create-routes';
-import Route from './types/routes';
+import createRoute from './helpers/create-routes';
 
 // Global mock routes with Faker function mappings
-const productsRoute = createRoutes({
+const productsRoute = createRoute({
   path: '/products',
   method: 'get',
   response: {
@@ -56,7 +55,7 @@ const productsRoute = createRoutes({
   ],
 });
 
-const productByIdRoute: Route<any> = createRoutes({
+const productByIdRoute = createRoute({
   path: '/products/:id',
   method: 'get',
   response: {
