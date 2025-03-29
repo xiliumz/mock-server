@@ -4,9 +4,8 @@ import cors from './middleware/cors';
 import logger from './middleware/logger';
 import generateMockResponse from './services/generate-mock-response';
 import handleQueryParams from './services/handle-query-params';
-import Route from './types/routes';
+import Route from './types/route';
 import delay from './middleware/delay';
-import DataGeneration from './types/data-generation-type';
 
 /**
  * Builds and configures a Hyper Express server with mock routes
@@ -20,14 +19,14 @@ export default function buildApp<T extends Record<string, unknown>>(routes: Rout
   // Apply global middleware
   app.use(cors);
   app.use(logger);
-  app.use(delay(2000));
+  app.use(delay());
 
   // Register mock routes
   routes.forEach((route) => {
-    const { path, method, response, isGenerated = true, queryParams } = route;
+    const { path, method, response, queryParams } = route;
 
     // Generate initial mock data if needed
-    const initialData = generateMockResponse(response as Record<string, DataGeneration>, isGenerated)
+    const initialData = generateMockResponse<T>(response);
 
     // Create route handler
     const handler = async (req: Request, res: Response) => {

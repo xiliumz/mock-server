@@ -1,25 +1,21 @@
 import { faker } from '@faker-js/faker';
-import Route from '../types/routes';
-import DataGeneration from '../types/data-generation-type';
+import Route from '../types/route';
 
-export default function generateMockResponse<T extends Record<string, DataGeneration>>(
-  responseTemplate: Route<T>['response'],
-  isGenerated = true
-) {
-  if (!isGenerated) return responseTemplate;
-
+export default function generateMockResponse<T extends Record<string, unknown>>(
+  responseTemplate: Route<T>['response']
+): Record<string, unknown> {
   const response = {} as Record<string, unknown>;
 
   Object.entries(responseTemplate).forEach(([key, value]) => {
     // Handle arrays by applying generation to each element
     if (Array.isArray(value)) {
-      response[key] = value.map(item => {
+      response[key] = value.map((item) => {
         if (typeof item === 'string') {
           // If array element is a string, apply data generation
           return generateSingleValue(item);
         } else if (typeof item === 'object') {
           // If array element is an object, recursively generate its properties
-          return generateMockResponse(item as Record<string, DataGeneration>, true);
+          return generateMockResponse(item);
         }
         return item;
       });
