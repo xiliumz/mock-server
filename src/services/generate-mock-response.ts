@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import Route from '../types/routes';
+import Route from '../types/route';
 import DataGeneration from '../types/data-generation-type';
 
 export default function generateMockResponse<T extends Record<string, DataGeneration>>(

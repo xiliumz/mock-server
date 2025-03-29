@@ -4,7 +4,7 @@ import cors from './middleware/cors';
 import logger from './middleware/logger';
 import generateMockResponse from './services/generate-mock-response';
 import handleQueryParams from './services/handle-query-params';
-import Route from './types/routes';
+import Route from './types/route';
 import delay from './middleware/delay';
 import DataGeneration from './types/data-generation-type';
 
