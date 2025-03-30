@@ -3,7 +3,7 @@
  *
  * @template T - The type of data passed to the handler.
  */
-export interface QueryParams<T> {
+export interface QueryParam<T> {
   /**
    * The name of the query parameter.
    */
@@ -15,5 +15,5 @@ export interface QueryParams<T> {
    * @param data - The current data context.
    * @param value - The query parameter value.
    */
-  handler: (data: T, value: string) => void;
+  handler: (data: T, value: string | undefined) => void;
 }

@@ -1,5 +1,5 @@
 import HTTPMethod from './http-method';
-import { QueryParams } from './query-params';
+import { QueryParam } from './query-param';
 
 export default interface Route<T> {
   path: string;
@@ -8,5 +8,5 @@ export default interface Route<T> {
 
   response: T;
 
-  queryParams?: QueryParams<T>[];
+  queryParams?: QueryParam<T>[];
 }
