@@ -2,7 +2,6 @@ import { Server, Request, Response } from 'hyper-express';
 import determineStatus from './helpers/determine-status';
 import cors from './middleware/cors';
 import logger from './middleware/logger';
-import generateMockResponse from './services/generate-mock-response';
 import handleQueryParams from './services/handle-query-params';
 import Route from './types/route';
 import delay from './middleware/delay';
@@ -25,17 +24,14 @@ export default function buildApp<T extends Record<string, unknown>>(routes: Rout
   routes.forEach((route) => {
     const { path, method, response, queryParams } = route;
 
-    // Generate initial mock data if needed
-    const initialData = generateMockResponse<T>(response);
-
     // Create route handler
     const handler = async (req: Request, res: Response) => {
       try {
         // Create a copy of the initial data to avoid modifying the original
-        const result = { ...initialData };
+        const result = { ...response };
 
         // Apply query parameter filters if any
-        handleQueryParams(req, result as T, queryParams);
+        handleQueryParams(req, result, queryParams);
 
         // Send response with appropriate status code
         res.status(determineStatus(method)).json(result);
