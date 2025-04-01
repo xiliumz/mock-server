@@ -1,5 +1,6 @@
 import createRoute from '../helpers/create-routes';
 import { faker } from '@faker-js/faker';
+
 export const index = createRoute({
   path: '/products',
   method: 'get',
@@ -15,15 +16,23 @@ export const index = createRoute({
     {
       name: 'offset',
       handler: (data, value = '0') => {
-        data.products = data.products.slice(parseInt(value));
+        const offset = parseInt(value);
+        if (isNaN(offset)) {
+          console.error('Offset must be a number');
+          return;
+        }
+        data.products = data.products.slice(offset);
       },
     },
     {
       name: 'limit',
       handler: (data, value = '10') => {
-        const products = data.products.slice(0, parseInt(value));
-        console.log(products);
-        data.products = products;
+        const limit = parseInt(value);
+        if (isNaN(limit)) {
+          console.error('Limit must be a number');
+          return;
+        }
+        data.products = data.products.slice(0, limit);
       },
     },
   ],
