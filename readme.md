@@ -33,12 +33,6 @@ yarn start
 
 The server will run at http://localhost:3000
 
-### Development mode
-
-```bash
-yarn dev
-```
-
 ### Running tests
 
 ```bash

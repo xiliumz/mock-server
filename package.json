@@ -4,7 +4,6 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc; node ./dist/main.js",
-    "dev": "tsc; ",
     "test": "jest",
     "test:watch": "jest --watch"
   },
