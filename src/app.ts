@@ -2,17 +2,18 @@ import { Server, Request, Response } from 'hyper-express';
 import determineStatus from './helpers/determine-status';
 import cors from './middleware/cors';
 import logger from './middleware/logger';
-import handleQueryParams from './services/handle-query-params';
 import Route from './types/route';
 import delay from './middleware/delay';
+import handleRoute from './services/route-handler';
 
 /**
  * Builds and configures a Hyper Express server with mock routes
  * @template T - The type of the response data
  * @param routes - Array of route configurations
+ * @param log - if true, log the registered routes
  * @returns Configured Hyper Express server instance
  */
-export default function buildApp<T extends Record<string, unknown>>(routes: Route<T>[]): Server {
+export default function buildApp<T extends Record<string, unknown>>(routes: Route<T>[], log = true): Server {
   const app = new Server();
 
   // Apply global middleware
@@ -22,28 +23,19 @@ export default function buildApp<T extends Record<string, unknown>>(routes: Rout
 
   // Register mock routes
   routes.forEach((route) => {
-    const { path, method, response, queryParams } = route;
+    const { path, method } = route;
 
-    // Create route handler
-    const handler = async (req: Request, res: Response) => {
-      try {
-        // Create a copy of the initial data to avoid modifying the original
-        const result = { ...response };
-
-        // Apply query parameter filters if any
-        handleQueryParams(req, result, queryParams);
-
-        // Send response with appropriate status code
-        res.status(determineStatus(method)).json(result);
-      } catch (error) {
-        console.error(`Error handling ${method.toUpperCase()} ${path}:`, error);
-        res.status(500).json({ error: 'Internal Server Error' });
-      }
+    // Simplified route handler using the extracted function
+    const handler = (req: Request, res: Response) => {
+      // No try-catch needed here as handleRoute handles errors internally
+      handleRoute(route, req, res);
     };
 
     // Register the route
     app[method](path, handler);
-    console.log(`Registered mock route: ${method.toUpperCase()} ${path}`);
+    if (log) {
+      console.log(`Registered mock route: ${method.toUpperCase()} ${path}`);
+    }
   });
 
   return app;
