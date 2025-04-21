@@ -29,9 +29,9 @@ describe('transformRoutesToPathBased', () => {
 
     // Verify the transformation
     expect(result).toEqual({
-      '/users': userRoutes.index,
-      '/users/:id': userRoutes.show,
-      '/posts': postRoutes.index,
+      'GET:/users': userRoutes.index,
+      'GET:/users/:id': userRoutes.show,
+      'GET:/posts': postRoutes.index,
     });
   });
 
@@ -66,7 +66,8 @@ describe('transformRoutesToPathBased', () => {
 
     // The last route module's definition should win
     expect(result).toEqual({
-      '/test': module2.route2,
+      'GET:/test': module1.route1,
+      'POST:/test': module2.route2,
     });
   });
 });
