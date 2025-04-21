@@ -1,27 +1,23 @@
+import { Server } from 'hyper-express';
 import buildApp from '../src/app';
-import { Server, Request, Response } from 'hyper-express';
 import Route from '../src/types/route';
-import determineStatus from '../src/helpers/determine-status';
-import handleQueryParams from '../src/services/handle-query-params';
-import handleRoute from '../src/services/route-handler';
-import { NotFoundError } from '../src/errors/not-found-error';
 
 // Mock dependencies
 jest.mock('hyper-express');
-jest.mock('../src/helpers/determine-status');
-jest.mock('../src/services/handle-query-params');
 jest.mock('../src/services/route-handler');
-jest.mock('../src/middleware/cors', () => jest.fn());
-jest.mock('../src/middleware/logger', () => jest.fn());
-jest.mock('../src/middleware/delay', () => jest.fn(() => jest.fn()));
 
 describe('buildApp', () => {
   let mockServer: jest.Mocked<Server>;
   let mockRoutes: Route<Record<string, unknown>>[];
+  let mockHandleRoute: jest.Mock;
 
   beforeEach(() => {
     // Clear all mocks
     jest.clearAllMocks();
+
+    // Mock handleRoute
+    mockHandleRoute = jest.fn();
+    jest.requireMock('../src/services/route-handler').default = mockHandleRoute;
 
     // Mock Server class
     mockServer = {
@@ -67,7 +63,31 @@ describe('buildApp', () => {
   it('should register routes correctly', () => {
     buildApp(mockRoutes, false);
 
+    (mockServer.get as jest.Mock).mockImplementation((path, handler) => {
+      handler();
+    });
+
     expect(mockServer.get).toHaveBeenCalledWith('/test', expect.any(Function));
     expect(mockServer.post).toHaveBeenCalledWith('/users', expect.any(Function));
+  });
+
+  it('should call handleRoute with correct arguments when handling requests', () => {
+    const mockReq = {};
+    const mockRes = {};
+
+    buildApp(mockRoutes, false);
+
+    // Get the handler function that was registered
+    const [[, getHandler]] = (mockServer.get as jest.Mock).mock.calls;
+    const [[, postHandler]] = (mockServer.post as jest.Mock).mock.calls;
+
+    // Call both handlers
+    getHandler(mockReq, mockRes);
+    postHandler(mockReq, mockRes);
+
+    // Verify handleRoute was called with correct arguments
+    expect(mockHandleRoute).toHaveBeenCalledTimes(2);
+    expect(mockHandleRoute).toHaveBeenNthCalledWith(1, mockRoutes[0], mockReq, mockRes);
+    expect(mockHandleRoute).toHaveBeenNthCalledWith(2, mockRoutes[1], mockReq, mockRes);
   });
 });
