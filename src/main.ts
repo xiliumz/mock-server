@@ -7,7 +7,7 @@ const routesArray = Object.values(routes);
 const routesByPath = transformRoutesToPathBased(routesArray);
 
 // Create server
-const app = buildApp(Object.values(routesByPath) as Route<any>[]);
+const app = buildApp(Object.values(routesByPath));
 
 app.listen(3000, () => {
   console.log('Mock Server running at http://localhost:3000 🚀');

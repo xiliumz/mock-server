@@ -33,6 +33,7 @@ export default function buildApp<T extends Record<string, unknown>>(routes: Rout
 
     // Register the route
     app[method](path, handler);
+    /* istanbul ignore if */
     if (log) {
       console.log(`Registered mock route: ${method.toUpperCase()} ${path}`);
     }
