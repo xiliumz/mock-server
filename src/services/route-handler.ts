@@ -20,6 +20,11 @@ export default async function handleRoute<T extends Record<string, unknown>>(
   try {
     let responseData: T | unknown; // Use unknown for flexibility with function return
 
+    // Determine the status code based on the HTTP method
+    const statusCode = determineStatus(method);
+
+    res.status(statusCode);
+
     if (typeof response === 'function') {
       // Explicitly await if the response function might be async
       responseData = await (response as (req: Request) => T | Promise<T>)(req);
@@ -37,11 +42,8 @@ export default async function handleRoute<T extends Record<string, unknown>>(
       return; // Stop execution if response type is invalid
     }
 
-    // Determine the status code based on the HTTP method
-    const statusCode = determineStatus(method);
-
     // Send the response
-    res.status(statusCode).json(responseData);
+    res.json(responseData);
   } catch (error) {
     if (error instanceof NotFoundError) {
       // Handle known NotFoundError specifically
